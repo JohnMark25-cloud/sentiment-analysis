@@ -36,7 +36,6 @@
     position: relative;
   }
 
-  /* Animated grid background */
   body::before {
     content: '';
     position: fixed;
@@ -65,7 +64,7 @@
     z-index: 1;
     max-width: 1080px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 16px;
   }
 
   /* NAV */
@@ -74,11 +73,11 @@
     backdrop-filter: blur(24px);
     border: 1px solid var(--border2);
     border-radius: 18px;
-    padding: 14px 24px;
+    padding: 12px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
     box-shadow: 0 4px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
   }
 
@@ -86,61 +85,23 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 700;
     letter-spacing: -0.3px;
   }
 
   .logo-icon {
-    width: 34px; height: 34px;
+    width: 32px; height: 32px;
     border-radius: 50%;
     background: conic-gradient(from 0deg, #7c5cfc, #22d3ee, #a78bfa, #7c5cfc);
     box-shadow: 0 0 16px rgba(124,92,252,0.5);
     animation: spin 8s linear infinite;
+    flex-shrink: 0;
   }
 
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  .nav-tabs {
-    display: flex;
-    gap: 6px;
-  }
-
-  .nav-tab {
-    padding: 7px 18px;
-    border-radius: 10px;
-    border: none;
-    background: transparent;
-    color: var(--muted);
-    font-family: 'Outfit', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-  }
-
-  .nav-tab.active {
-    color: var(--text);
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-  }
-
-  .nav-tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: -2px; left: 50%;
-    transform: translateX(-50%);
-    width: 24px; height: 2px;
-    background: var(--accent2);
-    border-radius: 2px;
-  }
-
-  .nav-tab:hover:not(.active) { color: var(--text); }
-
-  /* MAIN GRID */
+  /* MAIN GRID — desktop: 2 cols, mobile: 1 col */
   .main-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -151,7 +112,7 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 22px;
-    padding: 26px;
+    padding: 24px;
     box-shadow: 0 8px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
   }
 
@@ -168,7 +129,6 @@
     margin-bottom: 16px;
   }
 
-  /* QUICK EXAMPLES */
   .section-label {
     font-size: 10px;
     font-weight: 600;
@@ -189,7 +149,7 @@
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 7px 11px;
+    padding: 8px 11px;
     font-size: 12px;
     color: var(--muted);
     cursor: pointer;
@@ -199,15 +159,15 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  .example-chip:hover {
+  .example-chip:hover, .example-chip:active {
     border-color: var(--accent);
     color: var(--text);
     background: var(--surface3);
   }
 
-  /* TEXTAREA */
   textarea {
     width: 100%;
     background: var(--surface2);
@@ -219,7 +179,7 @@
     font-size: 15px;
     line-height: 1.6;
     min-height: 120px;
-    resize: none;
+    resize: vertical;
     transition: border-color 0.2s, box-shadow 0.2s;
     outline: none;
   }
@@ -233,7 +193,7 @@
 
   .classify-btn {
     width: 100%;
-    padding: 13px;
+    padding: 14px;
     background: linear-gradient(135deg, #7c5cfc, #9b7dfd, #a78bfa);
     border: none;
     border-radius: 13px;
@@ -246,6 +206,8 @@
     transition: all 0.2s;
     box-shadow: 0 4px 20px rgba(124,92,252,0.35);
     letter-spacing: 0.2px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .classify-btn:hover {
@@ -261,11 +223,11 @@
     transform: none;
   }
 
-  /* STAT CIRCLES */
+  /* STATS ROW */
   .stats-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 8px;
     margin-top: 14px;
   }
 
@@ -273,10 +235,8 @@
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 14px 10px;
+    padding: 12px 8px;
     text-align: center;
-    position: relative;
-    overflow: hidden;
   }
 
   .stat-total {
@@ -302,7 +262,6 @@
     font-weight: 500;
   }
 
-  /* SVG CIRCLE PROGRESS */
   .circle-wrap {
     position: relative;
     width: 80px;
@@ -310,15 +269,9 @@
     margin: 0 auto;
   }
 
-  .circle-wrap svg {
-    transform: rotate(-90deg);
-  }
+  .circle-wrap svg { transform: rotate(-90deg); }
 
-  .circle-bg {
-    fill: none;
-    stroke: var(--surface3);
-    stroke-width: 6;
-  }
+  .circle-bg { fill: none; stroke: var(--surface3); stroke-width: 6; }
 
   .circle-fill {
     fill: none;
@@ -342,7 +295,13 @@
   .circle-center.pos { color: var(--pos); }
   .circle-center.neg { color: var(--neg); }
 
-  /* ===== RIGHT CARD ===== */
+  /* RIGHT COL */
+  .right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
   .result-header {
     display: flex;
     align-items: flex-start;
@@ -350,15 +309,14 @@
     margin-bottom: 16px;
   }
 
-  /* Gauge */
   .gauge-wrap {
     width: 64px;
     text-align: center;
+    flex-shrink: 0;
   }
 
   .gauge-wrap svg { overflow: visible; }
 
-  /* Tags */
   .tags-row {
     display: flex;
     flex-wrap: wrap;
@@ -383,10 +341,7 @@
   .tag-urgency-high   { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); color: #ef4444; }
   .tag-urgency-low    { background: rgba(34,197,94,0.12); border-color: rgba(34,197,94,0.3); color: #22c55e; }
 
-  /* Score bars */
-  .metric-row {
-    margin-bottom: 12px;
-  }
+  .metric-row { margin-bottom: 12px; }
 
   .metric-head {
     display: flex;
@@ -422,13 +377,11 @@
   .bar-fill.score-neu { background: linear-gradient(90deg, var(--neu), #cbd5e1); }
   .bar-fill.confidence { background: linear-gradient(90deg, #22d3ee, #7c5cfc); }
 
-  /* Key issues */
   .issues-title {
     font-size: 13px;
     font-weight: 600;
     color: var(--muted);
     margin-bottom: 8px;
-    letter-spacing: 0.3px;
   }
 
   .issue-list {
@@ -450,9 +403,7 @@
     animation: slideIn 0.4s forwards;
   }
 
-  @keyframes slideIn {
-    to { opacity: 1; transform: translateX(0); }
-  }
+  @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
 
   .issue-dot {
     width: 7px; height: 7px;
@@ -460,7 +411,6 @@
     flex-shrink: 0;
   }
 
-  /* Recommendation box */
   .rec-box {
     background: linear-gradient(135deg, rgba(124,92,252,0.08), rgba(34,211,238,0.05));
     border: 1px solid rgba(124,92,252,0.25);
@@ -480,13 +430,12 @@
     color: var(--accent2);
   }
 
-  /* Placeholder */
   .placeholder {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 240px;
+    height: 200px;
     color: var(--muted);
     gap: 10px;
   }
@@ -504,13 +453,11 @@
 
   .placeholder p { font-size: 13px; }
 
-  /* Recent history */
   .history-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 22px;
-    padding: 22px 26px;
-    margin-top: 16px;
+    padding: 20px 22px;
     box-shadow: 0 8px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
   }
 
@@ -531,8 +478,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    padding: 10px 14px;
+    gap: 10px;
+    padding: 10px 13px;
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -585,18 +532,6 @@
   .dot-neu { background: var(--neu); }
   .dot-mix { background: var(--mix); box-shadow: 0 0 6px rgba(245,158,11,0.6); }
 
-  /* Result grid (right column with history below) */
-  .right-col {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  /* Gauge animation */
-  @keyframes gaugeGrow {
-    from { stroke-dashoffset: 188; }
-  }
-
   .loading-dots::after {
     content: '';
     animation: dots 1.2s infinite;
@@ -609,7 +544,6 @@
     100% { content: '...'; }
   }
 
-  /* Shimmer on loading */
   .shimmer {
     background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%);
     background-size: 400% 100%;
@@ -623,6 +557,138 @@
     0%   { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
   }
+
+  /* ===========================
+     RESPONSIVE BREAKPOINTS
+     =========================== */
+
+  /* Tablet: 600px–900px — still 2 cols but tighter */
+  @media (max-width: 900px) {
+    .wrapper { padding: 12px; }
+
+    .card { padding: 20px; border-radius: 18px; }
+
+    .main-grid { gap: 12px; }
+
+    .stat-total-num { font-size: 24px; }
+
+    .circle-wrap { width: 68px; height: 68px; }
+    .circle-wrap svg { width: 68px; height: 68px; }
+    .circle-center { font-size: 14px; }
+    .circle-fill, .circle-bg { stroke-width: 5; }
+  }
+
+  /* Mobile: single column below 640px */
+  @media (max-width: 640px) {
+    .wrapper { padding: 10px; }
+
+    nav {
+      border-radius: 14px;
+      padding: 10px 16px;
+      margin-bottom: 12px;
+    }
+
+    .logo { font-size: 15px; gap: 8px; }
+    .logo-icon { width: 28px; height: 28px; }
+
+    /* Stack grid into single column */
+    .main-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .card {
+      padding: 18px;
+      border-radius: 16px;
+    }
+
+    .card-title { font-size: 15px; }
+    .card-sub { font-size: 12px; margin-bottom: 12px; }
+
+    /* Examples: still 2 cols on mobile */
+    .examples-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+
+    .example-chip {
+      padding: 9px 10px;
+      font-size: 11.5px;
+    }
+
+    textarea {
+      font-size: 16px; /* prevent iOS zoom */
+      min-height: 100px;
+      padding: 12px 14px;
+    }
+
+    .classify-btn {
+      padding: 15px;
+      font-size: 15px;
+      border-radius: 12px;
+    }
+
+    /* Stats row — keep 3 cols on mobile but shrink circles */
+    .stats-row {
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .stat-card {
+      padding: 10px 6px;
+      border-radius: 13px;
+    }
+
+    .stat-total { height: 66px; }
+    .stat-total-num { font-size: 22px; }
+    .stat-label { font-size: 10px; }
+
+    .circle-wrap { width: 62px; height: 62px; }
+    .circle-wrap svg { width: 62px; height: 62px; viewBox: "0 0 62 62"; }
+
+    /* Re-center circle SVG for smaller size */
+    .circle-center { font-size: 13px; }
+
+    .right-col { gap: 12px; }
+
+    .result-header { margin-bottom: 12px; }
+
+    .gauge-wrap { width: 52px; }
+    .gauge-wrap svg { width: 52px; height: 30px; }
+
+    .history-card {
+      padding: 16px 16px;
+      border-radius: 16px;
+    }
+
+    .history-title { font-size: 14px; margin-bottom: 10px; }
+
+    .history-item { padding: 9px 11px; }
+    .history-text { font-size: 12px; }
+    .history-badge { font-size: 10px; padding: 3px 8px; }
+  }
+
+  /* Very small phones (≤380px) */
+  @media (max-width: 380px) {
+    .examples-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .stats-row {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .stat-total-num { font-size: 20px; }
+
+    .circle-wrap { width: 56px; height: 56px; }
+    .circle-wrap svg { width: 56px; height: 56px; }
+    .circle-center { font-size: 12px; }
+
+    .card { padding: 14px; }
+
+    .classify-btn { font-size: 14px; }
+  }
 </style>
 </head>
 <body>
@@ -635,7 +701,6 @@
       <div class="logo-icon"></div>
       Sentiment<span style="color:#a78bfa">AI</span>
     </div>
-
   </nav>
 
   <!-- MAIN GRID -->
@@ -664,7 +729,6 @@
 
         <!-- STATS ROW -->
         <div class="stats-row">
-          <!-- Total -->
           <div class="stat-card">
             <div class="stat-total">
               <div class="stat-total-num" id="totalCount">0</div>
@@ -672,28 +736,24 @@
             </div>
           </div>
 
-          <!-- Positive % circle -->
           <div class="stat-card">
             <div class="circle-wrap">
               <svg width="80" height="80" viewBox="0 0 80 80">
                 <circle class="circle-bg" cx="40" cy="40" r="30"/>
                 <circle class="circle-fill pos" id="posCircle" cx="40" cy="40" r="30"
-                  stroke-dasharray="188.5"
-                  stroke-dashoffset="188.5"/>
+                  stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
               </svg>
               <div class="circle-center pos" id="posText">0%</div>
             </div>
             <div class="stat-label" style="margin-top:6px">Positive</div>
           </div>
 
-          <!-- Negative % circle -->
           <div class="stat-card">
             <div class="circle-wrap">
               <svg width="80" height="80" viewBox="0 0 80 80">
                 <circle class="circle-bg" cx="40" cy="40" r="30"/>
                 <circle class="circle-fill neg" id="negCircle" cx="40" cy="40" r="30"
-                  stroke-dasharray="188.5"
-                  stroke-dashoffset="188.5"/>
+                  stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
               </svg>
               <div class="circle-center neg" id="negText">0%</div>
             </div>
@@ -706,14 +766,12 @@
     <!-- RIGHT COLUMN -->
     <div class="right-col">
 
-      <!-- Result Card -->
       <div class="card" id="resultCard">
         <div class="result-header">
           <div>
             <div class="card-title">Result</div>
             <div class="card-sub">Classification output</div>
           </div>
-          <!-- Mini gauge -->
           <div class="gauge-wrap">
             <svg width="64" height="36" viewBox="0 0 64 36">
               <path d="M4 32 A28 28 0 0 1 60 32" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="6" stroke-linecap="round"/>
@@ -730,7 +788,6 @@
           </div>
         </div>
 
-        <!-- Result content -->
         <div id="resultContent">
           <div class="placeholder">
             <div class="placeholder-icon">💬</div>
@@ -739,7 +796,6 @@
         </div>
       </div>
 
-      <!-- Recent History Card -->
       <div class="history-card">
         <div class="history-title">Recent History</div>
         <div class="history-list" id="historyList">
@@ -753,12 +809,10 @@
 </div>
 
 <script>
-/* ===================== STATE ===================== */
 let total = 0, posCount = 0, negCount = 0, neuCount = 0;
-const CIRCUMFERENCE = 188.5; // 2 * pi * 30
+const CIRCUMFERENCE = 188.5;
 const history = [];
 
-/* ===================== HELPERS ===================== */
 function setExample(text) {
   document.getElementById('commentInput').value = text;
   document.getElementById('commentInput').focus();
@@ -774,7 +828,6 @@ function getTags(text, type) {
   if (t.includes('packaging') || t.includes('package'))                         tags.push({label:'packaging', cls:'tag-default'});
   if (tags.length === 0) tags.push({label:'general', cls:'tag-default'});
 
-  // urgency
   let urgency = 'low urgency', urgCls = 'tag-urgency-low';
   if (type === 'negative') { urgency = 'medium urgency'; urgCls = 'tag-urgency-medium'; }
   if (type === 'negative' && (text.includes('broken') || text.includes('damaged') || text.includes('urgent'))) {
@@ -812,30 +865,21 @@ function getRecommendation(type, text) {
   return 'Monitor this feedback and follow up if sentiment shifts.';
 }
 
-/* ===================== CIRCLES ===================== */
 function updateCircles() {
   const posPct = total > 0 ? Math.round((posCount / total) * 100) : 0;
   const negPct = total > 0 ? Math.round((negCount / total) * 100) : 0;
-
   document.getElementById('totalCount').textContent = total;
   document.getElementById('posText').textContent = posPct + '%';
   document.getElementById('negText').textContent = negPct + '%';
-
-  const posOffset = CIRCUMFERENCE - (posPct / 100) * CIRCUMFERENCE;
-  const negOffset = CIRCUMFERENCE - (negPct / 100) * CIRCUMFERENCE;
-  document.getElementById('posCircle').style.strokeDashoffset = posOffset;
-  document.getElementById('negCircle').style.strokeDashoffset = negOffset;
+  document.getElementById('posCircle').style.strokeDashoffset = CIRCUMFERENCE - (posPct / 100) * CIRCUMFERENCE;
+  document.getElementById('negCircle').style.strokeDashoffset = CIRCUMFERENCE - (negPct / 100) * CIRCUMFERENCE;
 }
 
-/* ===================== GAUGE ===================== */
 function updateGauge(score) {
-  // score: -1 to 1 → offset 88 (empty) to 0 (full)
-  const pct = (score + 1) / 2; // normalize 0–1
-  const offset = 88 - pct * 88;
-  document.getElementById('gaugePath').style.strokeDashoffset = offset;
+  const pct = (score + 1) / 2;
+  document.getElementById('gaugePath').style.strokeDashoffset = 88 - pct * 88;
 }
 
-/* ===================== HISTORY ===================== */
 function addHistory(text, sentiment) {
   const dotCls = {positive:'dot-pos', negative:'dot-neg', neutral:'dot-neu', mixed:'dot-mix'}[sentiment] || 'dot-neu';
   const badgeCls = {positive:'badge-positive', negative:'badge-negative', neutral:'badge-neutral', mixed:'badge-mixed'}[sentiment] || 'badge-neutral';
@@ -844,8 +888,7 @@ function addHistory(text, sentiment) {
   history.unshift({ preview, sentiment, dotCls, badgeCls });
   if (history.length > 5) history.pop();
 
-  const list = document.getElementById('historyList');
-  list.innerHTML = history.map((h, i) => `
+  document.getElementById('historyList').innerHTML = history.map((h, i) => `
     <div class="history-item" style="animation-delay:${i * 0.06}s">
       <div class="history-left">
         <div class="history-dot ${h.dotCls}"></div>
@@ -856,53 +899,30 @@ function addHistory(text, sentiment) {
   `).join('');
 }
 
-/* ===================== RENDER RESULT ===================== */
 function renderResult(r, originalText) {
-  const sentimentColor = {
-    positive: 'var(--pos)', negative: 'var(--neg)', neutral: 'var(--neu)', mixed: 'var(--mix)'
-  }[r.sentiment] || 'var(--neu)';
-
   const sentimentCls = `tag-${r.sentiment}`;
   const { tags, urgency, urgCls } = getTags(originalText, r.sentiment);
   const issues = getIssues(originalText, r.sentiment);
   const recommendation = getRecommendation(r.sentiment, originalText);
-
-  const scoreBarPct = Math.round((Math.abs(r.score)) * 100);
+  const scoreBarPct = Math.round(Math.abs(r.score) * 100);
   const scoreBarCls = r.sentiment === 'positive' ? 'score-pos' : r.sentiment === 'negative' ? 'score-neg' : 'score-neu';
   const scoreDisplay = r.score >= 0 ? '+' + r.score.toFixed(2) : r.score.toFixed(2);
   const confPct = Math.min(99, Math.max(40, Math.round(Math.abs(r.score) * 55 + 52)));
 
   document.getElementById('resultContent').innerHTML = `
-    <!-- Tags -->
     <div class="tags-row">
       <span class="tag ${sentimentCls}">${r.sentiment}</span>
       ${tags.map(t => `<span class="tag ${t.cls}">${t.label}</span>`).join('')}
       <span class="tag ${urgCls}">${urgency}</span>
     </div>
-
-    <!-- Score bar -->
     <div class="metric-row">
-      <div class="metric-head">
-        <span>Sentiment score</span>
-        <span class="metric-val">${scoreDisplay}</span>
-      </div>
-      <div class="bar-bg">
-        <div class="bar-fill ${scoreBarCls}" style="width:${scoreBarPct}%"></div>
-      </div>
+      <div class="metric-head"><span>Sentiment score</span><span class="metric-val">${scoreDisplay}</span></div>
+      <div class="bar-bg"><div class="bar-fill ${scoreBarCls}" style="width:${scoreBarPct}%"></div></div>
     </div>
-
-    <!-- Confidence bar -->
     <div class="metric-row">
-      <div class="metric-head">
-        <span>Confidence</span>
-        <span class="metric-val">${confPct}%</span>
-      </div>
-      <div class="bar-bg">
-        <div class="bar-fill confidence" style="width:${confPct}%"></div>
-      </div>
+      <div class="metric-head"><span>Confidence</span><span class="metric-val">${confPct}%</span></div>
+      <div class="bar-bg"><div class="bar-fill confidence" style="width:${confPct}%"></div></div>
     </div>
-
-    <!-- Issues -->
     <div class="issues-title">Key issues</div>
     <ul class="issue-list">
       ${issues.map((iss, i) => `
@@ -912,8 +932,6 @@ function renderResult(r, originalText) {
         </li>
       `).join('')}
     </ul>
-
-    <!-- Recommendation -->
     <div class="rec-box">
       <span class="rec-icon">✦</span>
       <span>${recommendation}</span>
@@ -921,7 +939,6 @@ function renderResult(r, originalText) {
   `;
 }
 
-/* ===================== LOADING STATE ===================== */
 function setLoading(on) {
   const btn = document.getElementById('classifyBtn');
   const btnText = document.getElementById('btnText');
@@ -941,13 +958,9 @@ function setLoading(on) {
   }
 }
 
-/* ===================== MAIN ===================== */
 async function classify() {
   const comment = document.getElementById('commentInput').value.trim();
-  if (!comment) {
-    document.getElementById('commentInput').focus();
-    return;
-  }
+  if (!comment) { document.getElementById('commentInput').focus(); return; }
 
   setLoading(true);
 
@@ -963,12 +976,9 @@ async function classify() {
 
     let type = data.result?.type || 'neutral';
     let polarity = data.result?.polarity ?? 0;
-
-    // Detect mixed
     if (Math.abs(polarity) < 0.15 && type !== 'neutral') type = 'mixed';
 
     const result = { sentiment: type, score: polarity };
-
     total++;
     if (type === 'positive') posCount++;
     else if (type === 'negative') negCount++;
@@ -980,10 +990,8 @@ async function classify() {
     addHistory(comment, type);
 
   } catch (err) {
-    // Fallback: simple keyword heuristic
     const t = comment.toLowerCase();
     let type = 'neutral', polarity = 0;
-
     const posWords = ['great','love','excellent','amazing','best','happy','perfect','good','fantastic','wonderful','fast','quick'];
     const negWords = ['broken','bad','terrible','awful','hate','worst','disappointed','damaged','horrible','slow','never','poor'];
     const posHits = posWords.filter(w => t.includes(w)).length;
@@ -993,7 +1001,6 @@ async function classify() {
     else if (negHits > posHits) { type = 'negative'; polarity = Math.max(-0.9, -negHits * 0.3); }
     else if (posHits > 0 && negHits > 0) { type = 'mixed'; polarity = (posHits - negHits) * 0.1; }
 
-    const result = { sentiment: type, score: polarity };
     total++;
     if (type === 'positive') posCount++;
     else if (type === 'negative') negCount++;
@@ -1001,14 +1008,13 @@ async function classify() {
 
     updateCircles();
     updateGauge(polarity);
-    renderResult(result, comment);
+    renderResult({ sentiment: type, score: polarity }, comment);
     addHistory(comment, type);
   }
 
   setLoading(false);
 }
 
-/* Allow Enter key in textarea with Ctrl/Cmd */
 document.getElementById('commentInput').addEventListener('keydown', function(e) {
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') classify();
 });
