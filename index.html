@@ -138,36 +138,6 @@
     margin-bottom: 8px;
   }
 
-  .examples-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    margin-bottom: 14px;
-  }
-
-  .example-chip {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 11px;
-    font-size: 12px;
-    color: var(--muted);
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Outfit', sans-serif;
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .example-chip:hover, .example-chip:active {
-    border-color: var(--accent);
-    color: var(--text);
-    background: var(--surface3);
-  }
-
   textarea {
     width: 100%;
     background: var(--surface2);
@@ -558,135 +528,54 @@
     100% { background-position: 0% 50%; }
   }
 
-  /* ===========================
-     RESPONSIVE BREAKPOINTS
-     =========================== */
-
-  /* Tablet: 600px–900px — still 2 cols but tighter */
   @media (max-width: 900px) {
     .wrapper { padding: 12px; }
-
     .card { padding: 20px; border-radius: 18px; }
-
     .main-grid { gap: 12px; }
-
     .stat-total-num { font-size: 24px; }
-
     .circle-wrap { width: 68px; height: 68px; }
     .circle-wrap svg { width: 68px; height: 68px; }
     .circle-center { font-size: 14px; }
     .circle-fill, .circle-bg { stroke-width: 5; }
   }
 
-  /* Mobile: single column below 640px */
   @media (max-width: 640px) {
     .wrapper { padding: 10px; }
-
-    nav {
-      border-radius: 14px;
-      padding: 10px 16px;
-      margin-bottom: 12px;
-    }
-
+    nav { border-radius: 14px; padding: 10px 16px; margin-bottom: 12px; }
     .logo { font-size: 15px; gap: 8px; }
     .logo-icon { width: 28px; height: 28px; }
-
-    /* Stack grid into single column */
-    .main-grid {
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
-    .card {
-      padding: 18px;
-      border-radius: 16px;
-    }
-
+    .main-grid { grid-template-columns: 1fr; gap: 12px; }
+    .card { padding: 18px; border-radius: 16px; }
     .card-title { font-size: 15px; }
     .card-sub { font-size: 12px; margin-bottom: 12px; }
-
-    /* Examples: still 2 cols on mobile */
-    .examples-grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 5px;
-      margin-bottom: 12px;
-    }
-
-    .example-chip {
-      padding: 9px 10px;
-      font-size: 11.5px;
-    }
-
-    textarea {
-      font-size: 16px; /* prevent iOS zoom */
-      min-height: 100px;
-      padding: 12px 14px;
-    }
-
-    .classify-btn {
-      padding: 15px;
-      font-size: 15px;
-      border-radius: 12px;
-    }
-
-    /* Stats row — keep 3 cols on mobile but shrink circles */
-    .stats-row {
-      gap: 6px;
-      margin-top: 12px;
-    }
-
-    .stat-card {
-      padding: 10px 6px;
-      border-radius: 13px;
-    }
-
+    textarea { font-size: 16px; min-height: 100px; padding: 12px 14px; }
+    .classify-btn { padding: 15px; font-size: 15px; border-radius: 12px; }
+    .stats-row { gap: 6px; margin-top: 12px; }
+    .stat-card { padding: 10px 6px; border-radius: 13px; }
     .stat-total { height: 66px; }
     .stat-total-num { font-size: 22px; }
     .stat-label { font-size: 10px; }
-
     .circle-wrap { width: 62px; height: 62px; }
-    .circle-wrap svg { width: 62px; height: 62px; viewBox: "0 0 62 62"; }
-
-    /* Re-center circle SVG for smaller size */
+    .circle-wrap svg { width: 62px; height: 62px; }
     .circle-center { font-size: 13px; }
-
     .right-col { gap: 12px; }
-
     .result-header { margin-bottom: 12px; }
-
     .gauge-wrap { width: 52px; }
     .gauge-wrap svg { width: 52px; height: 30px; }
-
-    .history-card {
-      padding: 16px 16px;
-      border-radius: 16px;
-    }
-
+    .history-card { padding: 16px 16px; border-radius: 16px; }
     .history-title { font-size: 14px; margin-bottom: 10px; }
-
     .history-item { padding: 9px 11px; }
     .history-text { font-size: 12px; }
     .history-badge { font-size: 10px; padding: 3px 8px; }
   }
 
-  /* Very small phones (≤380px) */
   @media (max-width: 380px) {
-    .examples-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .stats-row {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
+    .stats-row { grid-template-columns: repeat(3, 1fr); }
     .stat-total-num { font-size: 20px; }
-
     .circle-wrap { width: 56px; height: 56px; }
     .circle-wrap svg { width: 56px; height: 56px; }
     .circle-center { font-size: 12px; }
-
     .card { padding: 14px; }
-
     .classify-btn { font-size: 14px; }
   }
 </style>
@@ -695,7 +584,6 @@
 
 <div class="wrapper">
 
-  <!-- NAV -->
   <nav>
     <div class="logo">
       <div class="logo-icon"></div>
@@ -703,7 +591,6 @@
     </div>
   </nav>
 
-  <!-- MAIN GRID -->
   <div class="main-grid">
 
     <!-- LEFT COLUMN -->
@@ -712,14 +599,6 @@
         <div class="card-title">Analyze a comment</div>
         <div class="card-sub">Paste any customer comment below</div>
 
-        <div class="section-label">Quick Examples</div>
-        <div class="examples-grid">
-          <button class="example-chip" onclick="setExample('Broken on arrival, very disappointed!')">Broken on arrival...</button>
-          <button class="example-chip" onclick="setExample('Best purchase ever! Highly recommend!')">Best purchase ever!</button>
-          <button class="example-chip" onclick="setExample('No reply for 3 weeks. Terrible support.')">No reply for 3 weeks...</button>
-          <button class="example-chip" onclick="setExample('Does the job, okay I guess.')">Does the job, okay</button>
-        </div>
-
         <div class="section-label">Your Comment</div>
         <textarea id="commentInput" placeholder="Type or paste a customer comment here..."></textarea>
 
@@ -727,7 +606,6 @@
           <span id="btnText">Classify</span>
         </button>
 
-        <!-- STATS ROW -->
         <div class="stats-row">
           <div class="stat-card">
             <div class="stat-total">
@@ -812,11 +690,6 @@
 let total = 0, posCount = 0, negCount = 0, neuCount = 0;
 const CIRCUMFERENCE = 188.5;
 const history = [];
-
-function setExample(text) {
-  document.getElementById('commentInput').value = text;
-  document.getElementById('commentInput').focus();
-}
 
 function getTags(text, type) {
   const t = text.toLowerCase();
