@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SentimentAI</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c12;
+    --surface: #111420;
+    --surface2: #181c2a;
+    --surface3: #1e2336;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8eaf0;
+    --muted: #5a6278;
+    --accent: #7c5cfc;
+    --accent2: #a78bfa;
+    --pos: #22c55e;
+    --neg: #ef4444;
+    --neu: #94a3b8;
+    --mix: #f59e0b;
+    --cyan: #22d3ee;
+    --glow: rgba(124,92,252,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,92,252,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,92,252,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 800px; height: 400px;
+    background: radial-gradient(ellipse, rgba(124,92,252,0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* NAV */
+  nav {
+    background: rgba(17,20,32,0.9);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--border2);
+    border-radius: 18px;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .logo-icon {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #7c5cfc, #22d3ee, #a78bfa, #7c5cfc);
+    box-shadow: 0 0 16px rgba(124,92,252,0.5);
+    animation: spin 8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 6px;
+  }
+
+  .nav-tab {
+    padding: 7px 18px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .nav-tab.active {
+    color: var(--text);
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+  }
+
+  .nav-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 50%;
+    transform: translateX(-50%);
+    width: 24px; height: 2px;
+    background: var(--accent2);
+    border-radius: 2px;
+  }
+
+  .nav-tab:hover:not(.active) { color: var(--text); }
+
+  /* MAIN GRID */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 26px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  .card-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+
+  .card-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  /* QUICK EXAMPLES */
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .examples-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .example-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 11px;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Outfit', sans-serif;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .example-chip:hover {
+    border-color: var(--accent);
+    color: var(--text);
+    background: var(--surface3);
+  }
+
+  /* TEXTAREA */
+  textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 14px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 120px;
+    resize: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(124,92,252,0.15);
+  }
+
+  textarea::placeholder { color: var(--muted); }
+
+  .classify-btn {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, #7c5cfc, #9b7dfd, #a78bfa);
+    border: none;
+    border-radius: 13px;
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(124,92,252,0.35);
+    letter-spacing: 0.2px;
+  }
+
+  .classify-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 28px rgba(124,92,252,0.5);
+  }
+
+  .classify-btn:active { transform: translateY(0); }
+
+  .classify-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* STAT CIRCLES */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .stat-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 10px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-total {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+  }
+
+  .stat-total-num {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  /* SVG CIRCLE PROGRESS */
+  .circle-wrap {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+  }
+
+  .circle-wrap svg {
+    transform: rotate(-90deg);
+  }
+
+  .circle-bg {
+    fill: none;
+    stroke: var(--surface3);
+    stroke-width: 6;
+  }
+
+  .circle-fill {
+    fill: none;
+    stroke-width: 6;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .circle-fill.pos { stroke: var(--pos); filter: drop-shadow(0 0 6px rgba(34,197,94,0.6)); }
+  .circle-fill.neg { stroke: var(--neg); filter: drop-shadow(0 0 6px rgba(239,68,68,0.6)); }
+
+  .circle-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .circle-center.pos { color: var(--pos); }
+  .circle-center.neg { color: var(--neg); }
+
+  /* ===== RIGHT CARD ===== */
+  .result-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  /* Gauge */
+  .gauge-wrap {
+    width: 64px;
+    text-align: center;
+  }
+
+  .gauge-wrap svg { overflow: visible; }
+
+  /* Tags */
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .tag {
+    padding: 4px 11px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid;
+  }
+
+  .tag-mixed    { background: rgba(245,158,11,0.12); border-color: rgba(245,158,11,0.35); color: #f59e0b; }
+  .tag-positive { background: rgba(34,197,94,0.12);  border-color: rgba(34,197,94,0.35);  color: #22c55e; }
+  .tag-negative { background: rgba(239,68,68,0.12);  border-color: rgba(239,68,68,0.35);  color: #ef4444; }
+  .tag-neutral  { background: rgba(148,163,184,0.12); border-color: rgba(148,163,184,0.35); color: #94a3b8; }
+  .tag-default  { background: rgba(124,92,252,0.12); border-color: rgba(124,92,252,0.35); color: #a78bfa; }
+  .tag-urgency-medium { background: rgba(245,158,11,0.12); border-color: rgba(245,158,11,0.3); color: #f59e0b; }
+  .tag-urgency-high   { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); color: #ef4444; }
+  .tag-urgency-low    { background: rgba(34,197,94,0.12); border-color: rgba(34,197,94,0.3); color: #22c55e; }
+
+  /* Score bars */
+  .metric-row {
+    margin-bottom: 12px;
+  }
+
+  .metric-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .metric-val {
+    font-weight: 600;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+  }
+
+  .bar-bg {
+    height: 5px;
+    background: var(--surface3);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .bar-fill.score-pos { background: linear-gradient(90deg, var(--pos), #4ade80); }
+  .bar-fill.score-neg { background: linear-gradient(90deg, var(--neg), #f87171); }
+  .bar-fill.score-neu { background: linear-gradient(90deg, var(--neu), #cbd5e1); }
+  .bar-fill.confidence { background: linear-gradient(90deg, #22d3ee, #7c5cfc); }
+
+  /* Key issues */
+  .issues-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+  }
+
+  .issue-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 14px;
+  }
+
+  .issue-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text);
+    opacity: 0;
+    transform: translateX(-8px);
+    animation: slideIn 0.4s forwards;
+  }
+
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .issue-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Recommendation box */
+  .rec-box {
+    background: linear-gradient(135deg, rgba(124,92,252,0.08), rgba(34,211,238,0.05));
+    border: 1px solid rgba(124,92,252,0.25);
+    border-radius: 13px;
+    padding: 13px 15px;
+    font-size: 13px;
+    line-height: 1.5;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .rec-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: var(--accent2);
+  }
+
+  /* Placeholder */
+  .placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 240px;
+    color: var(--muted);
+    gap: 10px;
+  }
+
+  .placeholder-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+
+  .placeholder p { font-size: 13px; }
+
+  /* Recent history */
+  .history-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 22px 26px;
+    margin-top: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  .history-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    letter-spacing: -0.2px;
+  }
+
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: border-color 0.2s;
+    animation: fadeIn 0.4s forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  .history-item:hover { border-color: var(--border2); }
+
+  .history-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .history-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .history-text {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text);
+  }
+
+  .history-badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+    letter-spacing: 0.2px;
+  }
+
+  .badge-positive { background: rgba(34,197,94,0.15); color: #22c55e; }
+  .badge-negative { background: rgba(239,68,68,0.15); color: #ef4444; }
+  .badge-neutral  { background: rgba(148,163,184,0.15); color: #94a3b8; }
+  .badge-mixed    { background: rgba(245,158,11,0.15); color: #f59e0b; }
+
+  .dot-pos { background: var(--pos); box-shadow: 0 0 6px rgba(34,197,94,0.6); }
+  .dot-neg { background: var(--neg); box-shadow: 0 0 6px rgba(239,68,68,0.6); }
+  .dot-neu { background: var(--neu); }
+  .dot-mix { background: var(--mix); box-shadow: 0 0 6px rgba(245,158,11,0.6); }
+
+  /* Result grid (right column with history below) */
+  .right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Gauge animation */
+  @keyframes gaugeGrow {
+    from { stroke-dashoffset: 188; }
+  }
+
+  .loading-dots::after {
+    content: '';
+    animation: dots 1.2s infinite;
+  }
+
+  @keyframes dots {
+    0%   { content: ''; }
+    33%  { content: '.'; }
+    66%  { content: '..'; }
+    100% { content: '...'; }
+  }
+
+  /* Shimmer on loading */
+  .shimmer {
+    background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%);
+    background-size: 400% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 6px;
+    height: 14px;
+    margin-bottom: 8px;
+  }
+
+  @keyframes shimmer {
+    0%   { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">
+      <div class="logo-icon"></div>
+      Sentiment<span style="color:#a78bfa">AI</span>
+    </div>
+
+  </nav>
+
+  <!-- MAIN GRID -->
+  <div class="main-grid">
+
+    <!-- LEFT COLUMN -->
+    <div>
+      <div class="card">
+        <div class="card-title">Analyze a comment</div>
+        <div class="card-sub">Paste any customer comment below</div>
+
+        <div class="section-label">Quick Examples</div>
+        <div class="examples-grid">
+          <button class="example-chip" onclick="setExample('Broken on arrival, very disappointed!')">Broken on arrival...</button>
+          <button class="example-chip" onclick="setExample('Best purchase ever! Highly recommend!')">Best purchase ever!</button>
+          <button class="example-chip" onclick="setExample('No reply for 3 weeks. Terrible support.')">No reply for 3 weeks...</button>
+          <button class="example-chip" onclick="setExample('Does the job, okay I guess.')">Does the job, okay</button>
+        </div>
+
+        <div class="section-label">Your Comment</div>
+        <textarea id="commentInput" placeholder="Type or paste a customer comment here..."></textarea>
+
+        <button class="classify-btn" id="classifyBtn" onclick="classify()">
+          <span id="btnText">Classify</span>
+        </button>
+
+        <!-- STATS ROW -->
+        <div class="stats-row">
+          <!-- Total -->
+          <div class="stat-card">
+            <div class="stat-total">
+              <div class="stat-total-num" id="totalCount">0</div>
+              <div class="stat-label">Total analyzed</div>
+            </div>
+          </div>
+
+          <!-- Positive % circle -->
+          <div class="stat-card">
+            <div class="circle-wrap">
+              <svg width="80" height="80" viewBox="0 0 80 80">
+                <circle class="circle-bg" cx="40" cy="40" r="30"/>
+                <circle class="circle-fill pos" id="posCircle" cx="40" cy="40" r="30"
+                  stroke-dasharray="188.5"
+                  stroke-dashoffset="188.5"/>
+              </svg>
+              <div class="circle-center pos" id="posText">0%</div>
+            </div>
+            <div class="stat-label" style="margin-top:6px">Positive</div>
+          </div>
+
+          <!-- Negative % circle -->
+          <div class="stat-card">
+            <div class="circle-wrap">
+              <svg width="80" height="80" viewBox="0 0 80 80">
+                <circle class="circle-bg" cx="40" cy="40" r="30"/>
+                <circle class="circle-fill neg" id="negCircle" cx="40" cy="40" r="30"
+                  stroke-dasharray="188.5"
+                  stroke-dashoffset="188.5"/>
+              </svg>
+              <div class="circle-center neg" id="negText">0%</div>
+            </div>
+            <div class="stat-label" style="margin-top:6px">Negative</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-col">
+
+      <!-- Result Card -->
+      <div class="card" id="resultCard">
+        <div class="result-header">
+          <div>
+            <div class="card-title">Result</div>
+            <div class="card-sub">Classification output</div>
+          </div>
+          <!-- Mini gauge -->
+          <div class="gauge-wrap">
+            <svg width="64" height="36" viewBox="0 0 64 36">
+              <path d="M4 32 A28 28 0 0 1 60 32" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="6" stroke-linecap="round"/>
+              <path id="gaugePath" d="M4 32 A28 28 0 0 1 60 32" fill="none" stroke="url(#gaugeGrad)" stroke-width="6" stroke-linecap="round"
+                stroke-dasharray="88" stroke-dashoffset="88" style="transition: stroke-dashoffset 0.8s ease;"/>
+              <defs>
+                <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#ef4444"/>
+                  <stop offset="50%" stop-color="#f59e0b"/>
+                  <stop offset="100%" stop-color="#22c55e"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Result content -->
+        <div id="resultContent">
+          <div class="placeholder">
+            <div class="placeholder-icon">💬</div>
+            <p>Enter a comment and click Classify</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent History Card -->
+      <div class="history-card">
+        <div class="history-title">Recent History</div>
+        <div class="history-list" id="historyList">
+          <div style="text-align:center;color:var(--muted);font-size:13px;padding:12px 0;">No history yet</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ===================== STATE ===================== */
+let total = 0, posCount = 0, negCount = 0, neuCount = 0;
+const CIRCUMFERENCE = 188.5; // 2 * pi * 30
+const history = [];
+
+/* ===================== HELPERS ===================== */
+function setExample(text) {
+  document.getElementById('commentInput').value = text;
+  document.getElementById('commentInput').focus();
+}
+
+function getTags(text, type) {
+  const t = text.toLowerCase();
+  const tags = [];
+  if (t.includes('delivery') || t.includes('shipping') || t.includes('arrived')) tags.push({label:'delivery', cls:'tag-default'});
+  if (t.includes('broken') || t.includes('damaged') || t.includes('defective')) tags.push({label:'product quality', cls:'tag-default'});
+  if (t.includes('support') || t.includes('reply') || t.includes('respond'))    tags.push({label:'support', cls:'tag-default'});
+  if (t.includes('price') || t.includes('cheap') || t.includes('expensive'))    tags.push({label:'pricing', cls:'tag-default'});
+  if (t.includes('packaging') || t.includes('package'))                         tags.push({label:'packaging', cls:'tag-default'});
+  if (tags.length === 0) tags.push({label:'general', cls:'tag-default'});
+
+  // urgency
+  let urgency = 'low urgency', urgCls = 'tag-urgency-low';
+  if (type === 'negative') { urgency = 'medium urgency'; urgCls = 'tag-urgency-medium'; }
+  if (type === 'negative' && (text.includes('broken') || text.includes('damaged') || text.includes('urgent'))) {
+    urgency = 'high urgency'; urgCls = 'tag-urgency-high';
+  }
+
+  return { tags, urgency, urgCls };
+}
+
+function getIssues(text, type) {
+  const t = text.toLowerCase();
+  const issues = [];
+  if (t.includes('broken') || t.includes('damaged')) issues.push({text:'Product arrived damaged', color:'var(--neg)'});
+  if (t.includes('packaging') || t.includes('box'))  issues.push({text:'Packaging insufficient', color:'var(--mix)'});
+  if (t.includes('fast') || t.includes('quick') || t.includes('speedy')) issues.push({text:'Delivery speed was good', color:'var(--pos)'});
+  if (t.includes('support') || t.includes('reply'))  issues.push({text:'Support response needed', color:'var(--neg)'});
+  if (t.includes('quality') || t.includes('cheap'))  issues.push({text:'Product quality concern', color:'var(--mix)'});
+
+  if (issues.length === 0) {
+    if (type === 'positive') issues.push({text:'Positive customer experience', color:'var(--pos)'});
+    else if (type === 'negative') issues.push({text:'Customer dissatisfaction detected', color:'var(--neg)'});
+    else issues.push({text:'Neutral feedback received', color:'var(--neu)'});
+  }
+  return issues;
+}
+
+function getRecommendation(type, text) {
+  const t = text.toLowerCase();
+  if (type === 'negative') {
+    if (t.includes('broken') || t.includes('damaged')) return 'Offer a replacement and review packaging process for fragile items.';
+    if (t.includes('support') || t.includes('reply')) return 'Respond immediately — customer is waiting on support.';
+    return 'Reach out to resolve the issue and retain customer trust.';
+  }
+  if (type === 'positive') return 'Thank the customer and encourage them to leave a public review.';
+  return 'Monitor this feedback and follow up if sentiment shifts.';
+}
+
+/* ===================== CIRCLES ===================== */
+function updateCircles() {
+  const posPct = total > 0 ? Math.round((posCount / total) * 100) : 0;
+  const negPct = total > 0 ? Math.round((negCount / total) * 100) : 0;
+
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('posText').textContent = posPct + '%';
+  document.getElementById('negText').textContent = negPct + '%';
+
+  const posOffset = CIRCUMFERENCE - (posPct / 100) * CIRCUMFERENCE;
+  const negOffset = CIRCUMFERENCE - (negPct / 100) * CIRCUMFERENCE;
+  document.getElementById('posCircle').style.strokeDashoffset = posOffset;
+  document.getElementById('negCircle').style.strokeDashoffset = negOffset;
+}
+
+/* ===================== GAUGE ===================== */
+function updateGauge(score) {
+  // score: -1 to 1 → offset 88 (empty) to 0 (full)
+  const pct = (score + 1) / 2; // normalize 0–1
+  const offset = 88 - pct * 88;
+  document.getElementById('gaugePath').style.strokeDashoffset = offset;
+}
+
+/* ===================== HISTORY ===================== */
+function addHistory(text, sentiment) {
+  const dotCls = {positive:'dot-pos', negative:'dot-neg', neutral:'dot-neu', mixed:'dot-mix'}[sentiment] || 'dot-neu';
+  const badgeCls = {positive:'badge-positive', negative:'badge-negative', neutral:'badge-neutral', mixed:'badge-mixed'}[sentiment] || 'badge-neutral';
+  const preview = text.length > 40 ? text.slice(0, 40) + '…' : text;
+
+  history.unshift({ preview, sentiment, dotCls, badgeCls });
+  if (history.length > 5) history.pop();
+
+  const list = document.getElementById('historyList');
+  list.innerHTML = history.map((h, i) => `
+    <div class="history-item" style="animation-delay:${i * 0.06}s">
+      <div class="history-left">
+        <div class="history-dot ${h.dotCls}"></div>
+        <span class="history-text">${h.preview}</span>
+      </div>
+      <span class="history-badge ${h.badgeCls}">${h.sentiment}</span>
+    </div>
+  `).join('');
+}
+
+/* ===================== RENDER RESULT ===================== */
+function renderResult(r, originalText) {
+  const sentimentColor = {
+    positive: 'var(--pos)', negative: 'var(--neg)', neutral: 'var(--neu)', mixed: 'var(--mix)'
+  }[r.sentiment] || 'var(--neu)';
+
+  const sentimentCls = `tag-${r.sentiment}`;
+  const { tags, urgency, urgCls } = getTags(originalText, r.sentiment);
+  const issues = getIssues(originalText, r.sentiment);
+  const recommendation = getRecommendation(r.sentiment, originalText);
+
+  const scoreBarPct = Math.round((Math.abs(r.score)) * 100);
+  const scoreBarCls = r.sentiment === 'positive' ? 'score-pos' : r.sentiment === 'negative' ? 'score-neg' : 'score-neu';
+  const scoreDisplay = r.score >= 0 ? '+' + r.score.toFixed(2) : r.score.toFixed(2);
+  const confPct = Math.min(99, Math.max(40, Math.round(Math.abs(r.score) * 55 + 52)));
+
+  document.getElementById('resultContent').innerHTML = `
+    <!-- Tags -->
+    <div class="tags-row">
+      <span class="tag ${sentimentCls}">${r.sentiment}</span>
+      ${tags.map(t => `<span class="tag ${t.cls}">${t.label}</span>`).join('')}
+      <span class="tag ${urgCls}">${urgency}</span>
+    </div>
+
+    <!-- Score bar -->
+    <div class="metric-row">
+      <div class="metric-head">
+        <span>Sentiment score</span>
+        <span class="metric-val">${scoreDisplay}</span>
+      </div>
+      <div class="bar-bg">
+        <div class="bar-fill ${scoreBarCls}" style="width:${scoreBarPct}%"></div>
+      </div>
+    </div>
+
+    <!-- Confidence bar -->
+    <div class="metric-row">
+      <div class="metric-head">
+        <span>Confidence</span>
+        <span class="metric-val">${confPct}%</span>
+      </div>
+      <div class="bar-bg">
+        <div class="bar-fill confidence" style="width:${confPct}%"></div>
+      </div>
+    </div>
+
+    <!-- Issues -->
+    <div class="issues-title">Key issues</div>
+    <ul class="issue-list">
+      ${issues.map((iss, i) => `
+        <li class="issue-item" style="animation-delay:${0.1 + i * 0.1}s">
+          <div class="issue-dot" style="background:${iss.color}; box-shadow: 0 0 6px ${iss.color}66;"></div>
+          ${iss.text}
+        </li>
+      `).join('')}
+    </ul>
+
+    <!-- Recommendation -->
+    <div class="rec-box">
+      <span class="rec-icon">✦</span>
+      <span>${recommendation}</span>
+    </div>
+  `;
+}
+
+/* ===================== LOADING STATE ===================== */
+function setLoading(on) {
+  const btn = document.getElementById('classifyBtn');
+  const btnText = document.getElementById('btnText');
+  btn.disabled = on;
+  if (on) {
+    btnText.innerHTML = '<span class="loading-dots">Analyzing</span>';
+    document.getElementById('resultContent').innerHTML = `
+      <div style="padding:10px 0">
+        <div class="shimmer" style="width:40%"></div>
+        <div class="shimmer" style="width:100%"></div>
+        <div class="shimmer" style="width:80%"></div>
+        <div class="shimmer" style="width:60%; margin-top:16px"></div>
+        <div class="shimmer" style="width:100%"></div>
+      </div>`;
+  } else {
+    btnText.textContent = 'Classify';
+  }
+}
+
+/* ===================== MAIN ===================== */
+async function classify() {
+  const comment = document.getElementById('commentInput').value.trim();
+  if (!comment) {
+    document.getElementById('commentInput').focus();
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const res = await fetch('https://sentim-api.onrender.com/api/v1/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: comment })
+    });
+
+    if (!res.ok) throw new Error('API error');
+    const data = await res.json();
+
+    let type = data.result?.type || 'neutral';
+    let polarity = data.result?.polarity ?? 0;
+
+    // Detect mixed
+    if (Math.abs(polarity) < 0.15 && type !== 'neutral') type = 'mixed';
+
+    const result = { sentiment: type, score: polarity };
+
+    total++;
+    if (type === 'positive') posCount++;
+    else if (type === 'negative') negCount++;
+    else neuCount++;
+
+    updateCircles();
+    updateGauge(polarity);
+    renderResult(result, comment);
+    addHistory(comment, type);
+
+  } catch (err) {
+    // Fallback: simple keyword heuristic
+    const t = comment.toLowerCase();
+    let type = 'neutral', polarity = 0;
+
+    const posWords = ['great','love','excellent','amazing','best','happy','perfect','good','fantastic','wonderful','fast','quick'];
+    const negWords = ['broken','bad','terrible','awful','hate','worst','disappointed','damaged','horrible','slow','never','poor'];
+    const posHits = posWords.filter(w => t.includes(w)).length;
+    const negHits = negWords.filter(w => t.includes(w)).length;
+
+    if (posHits > negHits) { type = 'positive'; polarity = Math.min(0.9, posHits * 0.3); }
+    else if (negHits > posHits) { type = 'negative'; polarity = Math.max(-0.9, -negHits * 0.3); }
+    else if (posHits > 0 && negHits > 0) { type = 'mixed'; polarity = (posHits - negHits) * 0.1; }
+
+    const result = { sentiment: type, score: polarity };
+    total++;
+    if (type === 'positive') posCount++;
+    else if (type === 'negative') negCount++;
+    else neuCount++;
+
+    updateCircles();
+    updateGauge(polarity);
+    renderResult(result, comment);
+    addHistory(comment, type);
+  }
+
+  setLoading(false);
+}
+
+/* Allow Enter key in textarea with Ctrl/Cmd */
+document.getElementById('commentInput').addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') classify();
+});
+</script>
+</body>
+</html>
